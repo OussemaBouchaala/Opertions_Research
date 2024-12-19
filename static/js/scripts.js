@@ -75,13 +75,14 @@ function generateFields() {
     `;
   }
 
-  // Generate fields for minimum service levels
+  //Generate fields for minimum service levels
   for (let j = 0; j < customers; j++) {
     minServiceContainer.innerHTML += `
       <label>Minimum Service Level for Customer ${j + 1} (between 0 and 1):</label>
-      <input type="number" name="min_service_${j}" step="0.01" min="0" max="1" required><br><br>
+      <input type="number" name="min_service_${j}" step="0.1" min="0" max="1" required><br><br>
     `;
   }
+  console.log('Warehouses:', warehouses, 'Customers:', customers);
 }
 
 

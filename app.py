@@ -35,14 +35,11 @@ def submit_form():
     # penalty costs
     penality_cost = [int(request.form[f'penality_cost_{i}']) for i in range(customersNbre)]
     # demand
-    demand = [int(request.form[f'demand_{i}']) for i in range(customersNbre)]
+    demands = [int(request.form[f'demands_{i}']) for i in range(customersNbre)]
     # Capacities
     capacities = [int(request.form[f'capacity_{i}']) for i in range(warehousesNbre)]
     # Min service time
     min_service = [float(request.form[f'min_service_{i}']) for i in range(customersNbre)] 
-   
-
-    
    
     # Construct the data dictionary
     data = {
@@ -52,10 +49,12 @@ def submit_form():
         "transport_costs": transport_costs,
         "variable_costs": variable_costs,
         "penality_cost": penality_cost,
-        "demand": demand,
+        "demands": demands,
         "capacities": capacities,
         "min_service": min_service,
     }
+
+    print(request.form)  # Debugging step to inspect the submitted data
 
     # Save the data to a JSON file
     with open('inputs.json', 'w') as json_file:
