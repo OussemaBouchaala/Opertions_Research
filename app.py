@@ -108,6 +108,30 @@ def run_notebook():
     except Exception as e:
         return render_template('form.html', details="Error", output=f"Error running notebook: {e}")
 
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'json_file' not in request.files:
+        return "No file part", 400
+
+    file = request.files['json_file']
+    if file.filename == '':
+        return "No selected file", 400
+
+    if file and file.filename.endswith('.json'):
+        # Read the file and parse JSON content
+        try:
+            data = json.load(file)
+
+            # Save the data into the inputs.json file, overwriting the existing file
+            with open('inputs.json', 'w') as f:
+                json.dump(data, f, indent=4)
+
+            # Optionally return the parsed JSON data for confirmation
+            return render_template('form.html',)
+        except json.JSONDecodeError:
+            return render_template('form.html', output=json.JSONDecodeError)
+    else:
+        return render_template('form.html', output="Invalid file type. Only .json files are allowed.")
 
 if __name__ == '__main__':
     app.run(debug=True)

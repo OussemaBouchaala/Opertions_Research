@@ -57,7 +57,7 @@ function generateFields() {
   for (let i = 0; i < customers; i++) {
     penaltyCostsContainer.innerHTML += `
       <label>Penalty Cost for Customer ${i + 1}:</label>
-      <input type="number" name="penality_cost_${i}" required><br><br>
+      <input type="number" name="penality_cost_${i}" ><br><br>
     `;
   }
 
@@ -73,7 +73,7 @@ function generateFields() {
   for (let i = 0; i < warehouses; i++) {
     capacitiesContainer.innerHTML += `
       <label>Capacity for Location ${i + 1}:</label>
-      <input type="number" name="capacity_${i}" required><br><br>
+      <input type="number" name="capacity_${i}" ><br><br>
     `;
   }
 
@@ -124,22 +124,12 @@ function toggleCode() {
   demands = data["demands"]
   capacities = data["capacities"]
   min_service = data.get("min_service", [1.0] * customersNbre)  # Default to 100% service level
-  fixed_costs = data["fixed_costs"]
-  transport_costs = data["transport_costs"]
-  # # Data
-  # warehousesNbre= int(input("Give the number of warehouses available: "))
-  # customersNbre= int(input("Give the number of customers (places): "))
+
 
   warehouses = range(warehousesNbre)  # Index of warehouses
   customers = range(customersNbre)  # Index of customers
 
-  # Fixed costs for opening each warehouse
-  #fixed_costs = list(map(int, input("Enter space-separated integers presenting fixed cost for each warehouse w: ").split()))
-  # Transportation costs: cost to serve each customer from each warehouse
-  #transport_costs = []
-  # for i in warehouses:
-  #     row = list(map(int, input(f"Enter space-separated values for row {i+1}: ").split()))
-  #     transport_costs.append(row)
+
   # Step 4: Display the inputs
   print("Number of Warehouses:", warehousesNbre)
   print("Number of Customers:", customersNbre)
@@ -163,7 +153,8 @@ function toggleCode() {
   open_warehouse = model.addVars(warehouses, vtype=GRB.BINARY, name="Open")
 
   # Binary variables: 1 if customer c is served by warehouse w, 0 otherwise
-  serve_customer = model.addVars(warehouses, customers, vtype=GRB.BINARY, name="Serve")
+  serve_customer = model.addVars(warehouses, customers, vtype=GRB.INTEGER, name="Serve")
+
   # Objective: Minimize total fixed and transportation costs
   model.setObjective(
       quicksum(fixed_costs[w] * open_warehouse[w] for w in warehouses) +
@@ -174,19 +165,30 @@ function toggleCode() {
   )
   # Constraints
 
-  # 1. Each customer is served by exactly one warehouse
+  # 1. Each customer's demand is fully or partially satisfied
   for c in customers:
-      model.addConstr(quicksum(serve_customer[w, c] for w in warehouses) == 1, f"ServeCustomer_{c}")
+      model.addConstr(quicksum(serve_customer[w, c] for w in warehouses) <= demands[c], f"Demand_{c}")
 
-  # 2. A warehouse can serve a customer only if it is open
+  # 2. A warehouse can only serve a customer if it is open
   for w in warehouses:
       for c in customers:
-          model.addConstr(serve_customer[w, c] <= open_warehouse[w], f"Link_{w}_{c}")
+          model.addConstr(serve_customer[w, c] <= capacities[w] * open_warehouse[w], f"ServiceLink_{w}_{c}")
 
-  # 3. Non-negativity of served demand
-  model.addConstrs(
-      serve_customer[r, d] >= 0 for r in warehouses for d in customers
-  )
+  # 3. Total capacity of a warehouse cannot be exceeded
+  for w in warehouses:
+      model.addConstr(quicksum(serve_customer[w, c] for c in customers) <= capacities[w], f"Capacity_{w}")
+
+  # 4. Minimum service level for each customer
+  for c in customers:
+      model.addConstr(quicksum(serve_customer[w, c] for w in warehouses) >= min_service[c] * demands[c], f"MinService_{c}")
+
+  # 5. Non-negativity of served demand
+  model.addConstrs(serve_customer[w, c] >= 0 for w in warehouses for c in customers)
+
+  # 6. Unserved demand incurs penalty
+  for c in customers:
+      model.addConstr(quicksum(serve_customer[w, c] for w in warehouses) <= demands[c], f"UnservedPenalty_{c}")
+
   # Optimize the model
   model.optimize()
 
@@ -195,11 +197,11 @@ function toggleCode() {
       print("\nOptimal Solution Found:\n")
       for w in warehouses:
           if open_warehouse[w].x > 0.5:  # Open warehouses
-              print(f"Warehouse in location {w+1} is open.")
-      # for w in warehouses:
-      #     for c in customers:
-      #         if serve_customer[w, c].x > 0.5:  # Customers served by warehouses
-      #             print(f"Customer {c+1} is served by Warehouse {w+1}.")
+              print(f"Warehouse {w+1} is open.")
+      for w in warehouses:
+          for c in customers:
+              if serve_customer[w, c].x > 0:
+                  print(f"Customer {c+1} is served by Warehouse {w+1} with {serve_customer[w, c].x} units.")
       print(f"\nTotal Cost = {model.objVal}")
   else:
       print("No optimal solution found.")
@@ -254,4 +256,24 @@ function toggleDetails() {
     toggleDetailsButton.textContent = "Details";
     console.log("Details hidden");
   }
+}
+
+// Function to show the form and hide the file upload
+function showForm() {
+  let formButton = document.getElementById('formB');
+  formButton.disabled=true;
+  let uploadButton = document.getElementById('uploadB');
+  uploadButton.disabled=false;
+  document.getElementById('formSection').classList.remove('hidden');
+  document.getElementById('uploadSection').classList.add('hidden');
+}
+
+// Function to show the file upload and hide the form
+function showJSONUpload() {
+  let formButton = document.getElementById('formB');
+  formButton.disabled=false;
+  let uploadButton = document.getElementById('uploadB');
+  uploadButton.disabled=true;
+  document.getElementById('formSection').classList.add('hidden');
+  document.getElementById('uploadSection').classList.remove('hidden');
 }

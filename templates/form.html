@@ -15,28 +15,46 @@
 </head>
 
 <body>
-  <h1>Enter Warehouse and Customer Data</h1>
-  <form action="/submit" method="POST" id="input-form" autocomplete="on">
-    <label>Number of Locations:</label>
-    <input type="number" name="warehouses" required /><br /><br />
+  <h1>Choose an Input Method</h1>
 
-    <label>Number of Customers:</label>
-    <input type="number" name="customers" required /><br /><br />
+  <!-- Buttons to switch between form and file upload -->
+  <button id="formB" class="toggle-btn" onclick="showForm()" disabled>Fill out the form</button>
+  <button id="uploadB" class="toggle-btn" onclick="showJSONUpload()">Upload JSON File</button>
 
-    <button type="button" onclick="generateFields()">
-      Generate Input Fields</button><br /><br />
+  <br><br>
+  <div id="formSection">
+    <h2>Fill out the form:</h2>
+    <form action="/submit" method="POST" id="input-form" autocomplete="on">
+      <label>Number of Locations:</label>
+      <input type="number" name="warehouses" required /><br /><br />
 
-    <!-- Containers for dynamically generated inputs -->
-    <div id="fixed-costs"></div>
-    <div id="transport-costs"></div>
-    <div id="variable-costs"></div>
-    <div id="penality-costs"></div>
-    <div id="demands"></div>
-    <div id="capacities"></div>
-    <div id="min-service"></div>
+      <label>Number of Customers:</label>
+      <input type="number" name="customers" required /><br /><br />
 
-    <button type="submit">Submit Data</button>
-  </form>
+      <button type="button" onclick="generateFields()">
+        Generate Input Fields</button><br /><br />
+
+      <!-- Containers for dynamically generated inputs -->
+      <div id="fixed-costs"></div>
+      <div id="transport-costs"></div>
+      <div id="variable-costs"></div>
+      <div id="penality-costs"></div>
+      <div id="demands"></div>
+      <div id="capacities"></div>
+      <div id="min-service"></div>
+
+      <button type="submit">Submit Data</button>
+    </form>
+  </div>
+  <!-- Hidden section for JSON file upload -->
+  <div id="uploadSection" class="hidden">
+    <h2>Upload JSON File:</h2>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <label for="json_file">Choose JSON File:</label>
+        <input type="file" name="json_file" accept=".json" required><br><br>
+        <button type="submit">Upload</button>
+    </form>
+</div>
 
   <!-- Button to trigger notebook execution -->
   <form action="/run_notebook" method="POST">
