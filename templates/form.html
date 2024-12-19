@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Input Interface</title>
+  <link rel="stylesheet" href="/static/css/styles.css" />
+  <!-- Include Prism.js Stylesheet for Syntax Highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+
+  <!-- Include Prism.js Script for Syntax Highlighting -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-python.min.js"></script>
+</head>
+
+<body>
+  <h1>Enter Warehouse and Customer Data</h1>
+  <form action="/submit" method="POST" id="input-form">
+    <label>Number of Locations:</label>
+    <input type="number" name="warehouses" required /><br /><br />
+
+    <label>Number of Customers:</label>
+    <input type="number" name="customers" required /><br /><br />
+
+    <button type="button" onclick="generateFields()">
+      Generate Input Fields</button><br /><br />
+
+    <!-- Containers for dynamically generated inputs -->
+    <div id="fixed-costs"></div>
+    <div id="transport-costs"></div>
+    <div id="variable-costs"></div>
+    <div id="penalty-costs"></div>
+    <div id="demands"></div>
+    <div id="capacities"></div>
+    <div id="min-service"></div>
+
+    <button type="submit" onclick="showOutputsection()">Submit Data</button>
+  </form>
+
+  <!-- Button to trigger notebook execution -->
+  <form action="/run_notebook" method="POST">
+    <button type="submit" onclick="scrollToOutput('output')">Solve</button>
+  </form>
+  <!-- Buttons for toggling code and details -->
+  <div id="toggleButtons">
+    <!-- Button to trigger displaying the code -->
+    <button id="toggleCodeButton" class="toggle-btn" onclick="toggleCode();scrollToOutput('code-container');">
+      Code
+    </button>
+    <button id="toggleDetailsButton" class="toggle-btn" onclick="toggleDetails();scrollToOutput('detailsSection');">
+      Details
+    </button>
+  </div>
+  <!-- Display Output from Last Cell -->
+  <h3>Outputed solution:</h3>
+  <pre id="output">
+      {% if output %} {{ output }} {% else %} Click on solve! {% endif %}
+  </pre>
+
+  <!-- Container for displaying the code -->
+  <pre id="code-container" style="display: none"><code class="language-python"></code></pre>
+  <!-- Details Section -->
+  <div id="detailsSection" style="
+          display: none;
+          background: #f0f0f0;
+          padding: 15px;
+          border-radius: 5px;
+        ">
+    <h3>Solving Details:</h3>
+    <pre
+      id="details">{% if details %} {{ details }} {% else %} Fill the problem form to show details ! {% endif %}</pre>
+  </div>
+
+
+  <script src="/static/js/scripts.js"></script>
+</body>
+
+</html>

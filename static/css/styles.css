@@ -1,0 +1,152 @@
+/* General Reset */
+body, h1, h3, p, label, input, button, form {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+    color: #333;
+    padding: 20px;
+}
+
+/* Header Styling */
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* Form Styling */
+form {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto 20px;
+}
+
+form h4 {
+    margin-top: 20px;
+    color: #34495e;
+}
+
+/* Labels and Inputs */
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #34495e;
+}
+
+input[type="number"],
+input[type="text"],
+button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #dfe6e9;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+/* Input Focus */
+input:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+/* Buttons */
+button[type="button"],
+button[type="submit"],
+input[type="submit"] {
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+button[type="button"]:hover,
+button[type="submit"]:hover,
+input[type="submit"]:hover {
+    background-color: #2980b9;
+}
+
+/* Output Section */
+#output, 
+#details {
+    font-family: 'Courier New', Courier, monospace;
+    color: #2c3e50;
+    background: #ecf0f1;
+    padding: 4px;
+    border-radius: 5px;
+    margin-top: 20px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Field Containers */
+#fixed-costs,
+#transport-costs {
+    margin-top: 20px;
+}
+
+/* Transport Costs Section Header */
+#transport-costs h4 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+/* Add subtle hover effect */
+form input:hover,
+form button:hover {
+    background-color: #ecf0f1;
+    cursor: pointer;
+}
+
+/* Media Query for Responsive Design */
+@media (max-width: 768px) {
+    form {
+        padding: 15px;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    button {
+        font-size: 0.9rem;
+    }
+}
+
+#code-container{
+    background-color: #2d2d2d;
+    color: #f8f8f2;
+    padding: 7px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.toggle-btn {
+    background-color: #007BFF;
+}
+.toggle-btn:hover {
+    background-color: #0056b3;
+}
+
+#toggleButtons {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
