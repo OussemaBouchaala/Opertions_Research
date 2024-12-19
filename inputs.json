@@ -1,57 +1,33 @@
 {
-    "warehousesNbre": 3,
-    "customersNbre": 4,
+    "warehousesNbre": 2,
+    "customersNbre": 1,
     "fixed_costs": [
-        1000,
-        1200,
-        1100
+        100,
+        105
     ],
     "transport_costs": [
         [
-            10,
-            15,
-            20,
-            25
+            15
         ],
         [
-            12,
-            18,
-            22,
-            28
-        ],
-        [
-            14,
-            19,
-            21,
-            30
+            13
         ]
     ],
     "variable_costs": [
-        5,
-        6,
-        7
+        15,
+        12
     ],
-    "penalty_costs": [
-        50,
-        60,
-        70,
-        80
+    "penality_costs": [
+        13
     ],
     "demands": [
-        100,
-        200,
-        150,
-        300
+        10
     ],
     "capacities": [
-        250,
-        250,
-        250
+        12,
+        14
     ],
     "min_service": [
-        0.8,
-        0.9,
-        1.0,
         0.7
     ]
 }

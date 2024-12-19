@@ -10,31 +10,33 @@ function generateFields() {
   let fixedCostsContainer = document.getElementById("fixed-costs");
   let transportCostsContainer = document.getElementById("transport-costs");
   let variableCostsContainer = document.getElementById("variable-costs");
-  let penaltyCostsContainer = document.getElementById("penalty-costs");
+  let penaltyCostsContainer = document.getElementById("penality-costs");
   let demandsContainer = document.getElementById("demands");
   let capacitiesContainer = document.getElementById("capacities");
   let minServiceContainer = document.getElementById("min-service");
 
   // Clear previous fields
-  fixedCostsContainer.innerHTML = "";
-  transportCostsContainer.innerHTML = "";
-  variableCostsContainer.innerHTML = "";
-  penaltyCostsContainer.innerHTML = "";
-  demandsContainer.innerHTML = "";
-  capacitiesContainer.innerHTML = "";
-  minServiceContainer.innerHTML = "";
+  // fixedCostsContainer.innerHTML = "";
+  // transportCostsContainer.innerHTML = "";
+  // variableCostsContainer.innerHTML = "";
+  // penaltyCostsContainer.innerHTML = "";
+  // demandsContainer.innerHTML = "";
+  // capacitiesContainer.innerHTML = "";
+  // minServiceContainer.innerHTML = "";
 
   // Generate fields for fixed costs
   for (let i = 0; i < warehouses; i++) {
     fixedCostsContainer.innerHTML += `
-      <label>Fixed Cost for Warehouse ${i}:</label>
+      <label>Fixed Cost for Location ${i + 1}:</label>
       <input type="number" name="fixed_cost_${i}" required><br><br>
     `;
   }
 
   // Generate fields for transportation costs
   for (let i = 0; i < warehouses; i++) {
-    transportCostsContainer.innerHTML += `<h4>Transportation Costs for Warehouse ${i + 1}:</h4>`;
+    transportCostsContainer.innerHTML += `<h4>Transportation Costs for Location ${
+      i + 1
+    }:</h4>`;
     for (let j = 0; j < customers; j++) {
       transportCostsContainer.innerHTML += `
         <label>Cost to Customer ${j + 1}:</label>
@@ -46,197 +48,210 @@ function generateFields() {
   // Generate fields for variable costs
   for (let i = 0; i < warehouses; i++) {
     variableCostsContainer.innerHTML += `
-      <label>Variable Cost for Warehouse ${i + 1}:</label>
+      <label>Variable Cost for Location ${i + 1}:</label>
       <input type="number" name="variable_cost_${i}" required><br><br>
     `;
   }
 
   // Generate fields for penalty costs
-  for (let j = 0; j < customers; j++) {
+  for (let i = 0; i < customers; i++) {
     penaltyCostsContainer.innerHTML += `
-      <label>Penalty Cost for Customer ${j + 1}:</label>
-      <input type="number" name="penalty_cost_${j}" required><br><br>
+      <label>Penalty Cost for Customer ${i + 1}:</label>
+      <input type="number" name="penality_cost_${i}" required><br><br>
     `;
   }
 
   // Generate fields for demands
-  for (let j = 0; j < customers; j++) {
+  for (let i = 0; i < customers; i++) {
     demandsContainer.innerHTML += `
-      <label>Demand for Customer ${j + 1}:</label>
-      <input type="number" name="demand_${j}" required><br><br>
+      <label>Demand for Customer ${i + 1}:</label>
+      <input type="number" name="demand_${i}" required><br><br>
     `;
   }
 
   // Generate fields for capacities
   for (let i = 0; i < warehouses; i++) {
     capacitiesContainer.innerHTML += `
-      <label>Capacity for Warehouse ${i + 1}:</label>
+      <label>Capacity for Location ${i + 1}:</label>
       <input type="number" name="capacity_${i}" required><br><br>
     `;
   }
 
   //Generate fields for minimum service levels
-  for (let j = 0; j < customers; j++) {
+  for (let i = 0; i < customers; i++) {
     minServiceContainer.innerHTML += `
-      <label>Minimum Service Level for Customer ${j + 1} (between 0 and 1):</label>
-      <input type="number" name="min_service_${j}" step="0.1" min="0" max="1" required><br><br>
+      <label>Minimum Service Level for Customer ${
+        i + 1
+      } (between 0 and 1):</label>
+      <input type="number" name="min_service_${i}" step="0.1" min="0" max="1" required><br><br>
     `;
   }
-  console.log('Warehouses:', warehouses, 'Customers:', customers);
+  console.log("Warehouses:", warehouses, "Customers:", customers);
 }
-
 
 // Function to toggle the visibility of the code
 function toggleCode() {
-    var codeContainer = document.getElementById("code-container");
-    var toggleButton = document.getElementById("toggleCodeButton");
-    var detailsSection = document.getElementById("detailsSection");
-    var toggleDetailsButton = document.getElementById("toggleDetailsButton");
-    // Check if the code is currently hidden or shown
-    if (codeContainer.style.display === "none") {
-      // If hidden, show the code
-      var code = `
-        from gurobipy import *
-        # Import necessary libraries
-        import json
-        import os
+  var codeContainer = document.getElementById("code-container");
+  var toggleButton = document.getElementById("toggleCodeButton");
+  var detailsSection = document.getElementById("detailsSection");
+  var toggleDetailsButton = document.getElementById("toggleDetailsButton");
+  // Check if the code is currently hidden or shown
+  if (codeContainer.style.display === "none") {
+    // If hidden, show the code
+    var code = `
+  from gurobipy import *
+  # Import necessary libraries
+  import json
+  import os
 
-        # Path to the input file generated by the Flask app
-        input_file = "inputs.json"
+  # Path to the input file generated by the Flask app
+  input_file = "inputs.json"
 
-        # Step 1: Load the input data
-        if os.path.exists(input_file):
-            with open(input_file, "r") as f:
-                data = json.load(f)
-        else:
-            raise FileNotFoundError(f"{input_file} not found. Run the Flask app to save the inputs.")
+  # Step 1: Load the input data
+  if os.path.exists(input_file):
+      with open(input_file, "r") as f:
+          data = json.load(f)
+  else:
+      raise FileNotFoundError(f"{input_file} not found. Run the Flask app to save the inputs.")
 
-        # Extract values
-        warehousesNbre = data["warehousesNbre"]
-        customersNbre = data["customersNbre"]
-        fixed_costs = data["fixed_costs"]
-        transport_costs = data["transport_costs"]
-        # # Data
-        # warehousesNbre= int(input("Give the number of warehouses available: "))
-        # customersNbre= int(input("Give the number of customers (places): "))
+  # Extract values
+  warehousesNbre = data["warehousesNbre"]
+  customersNbre = data["customersNbre"]
+  fixed_costs = data["fixed_costs"]
+  transport_costs = data["transport_costs"]
+  variable_costs = data["variable_costs"]
+  penalty_costs = data.get("penalty_costs", [0] * customersNbre)  # Optional penalty costs
+  demands = data["demands"]
+  capacities = data["capacities"]
+  min_service = data.get("min_service", [1.0] * customersNbre)  # Default to 100% service level
+  fixed_costs = data["fixed_costs"]
+  transport_costs = data["transport_costs"]
+  # # Data
+  # warehousesNbre= int(input("Give the number of warehouses available: "))
+  # customersNbre= int(input("Give the number of customers (places): "))
 
-        warehouses = [i for i in range(warehousesNbre)]  # Index of warehouses
-        customers = [i for i in range(customersNbre)]  # Index of customers
+  warehouses = range(warehousesNbre)  # Index of warehouses
+  customers = range(customersNbre)  # Index of customers
 
-        # Fixed costs for opening each warehouse
-        #fixed_costs = list(map(int, input("Enter space-separated integers presenting fixed cost for each warehouse w: ").split()))
-        # Transportation costs: cost to serve each customer from each warehouse
-        #transport_costs = []
-        # for i in warehouses:
-        #     row = list(map(int, input(f"Enter space-separated values for row {i+1}: ").split()))
-        #     transport_costs.append(row)
-        # Step 4: Display the inputs
-        print("Number of Warehouses:", warehousesNbre)
-        print("Number of Customers:", customersNbre)
-        print("Fixed Costs:", fixed_costs)
-        print("Transportation Costs:")
-        for row in transport_costs:
-            print(row)
+  # Fixed costs for opening each warehouse
+  #fixed_costs = list(map(int, input("Enter space-separated integers presenting fixed cost for each warehouse w: ").split()))
+  # Transportation costs: cost to serve each customer from each warehouse
+  #transport_costs = []
+  # for i in warehouses:
+  #     row = list(map(int, input(f"Enter space-separated values for row {i+1}: ").split()))
+  #     transport_costs.append(row)
+  # Step 4: Display the inputs
+  print("Number of Warehouses:", warehousesNbre)
+  print("Number of Customers:", customersNbre)
+  print("Fixed Costs:", fixed_costs)
+  print("Transportation Costs:")
+  for row in transport_costs:
+      print(row)
+  print("Variable Costs:", variable_costs)
+  print("Penalty Costs:", penalty_costs)
+  print("Demands:", demands)
+  print("Capacities:", capacities)
+  print("Minimum Service Levels:", min_service)
 
-        # Step 5: Example Usage
-        print("--- Example Usage ---")
-        print("Warehouses:", warehouses)
-        print("Customers:", customers)
-        print("Fixed Costs for Warehouses:", fixed_costs)
-        print("Transportation Costs Matrix:")
-        for i, row in enumerate(transport_costs):
-            print(f"Warehouse {i}: {row}")
+  # Customer demands (optional for extension, not used here directly)
+  #demands = [1, 1, 1, 1]  # Assume unit demand per customer
+  # Model
+  model = Model("Warehouse_Location")
 
-        # Model
-        model = Model("Warehouse_Location")
+  # Decision variables
+  # Binary variables: 1 if warehouse w is open, 0 otherwise
+  open_warehouse = model.addVars(warehouses, vtype=GRB.BINARY, name="Open")
 
-        # Decision variables
-        # Binary variables: 1 if warehouse w is open, 0 otherwise
-        open_warehouse = model.addVars(warehouses, vtype=GRB.BINARY, name="Open")
+  # Binary variables: 1 if customer c is served by warehouse w, 0 otherwise
+  serve_customer = model.addVars(warehouses, customers, vtype=GRB.BINARY, name="Serve")
+  # Objective: Minimize total fixed and transportation costs
+  model.setObjective(
+      quicksum(fixed_costs[w] * open_warehouse[w] for w in warehouses) +
+      quicksum(transport_costs[w][c] * serve_customer[w, c] for w in warehouses for c in customers)+
+      quicksum(variable_costs[r] * quicksum(serve_customer[r, d] for d in customers) for r in warehouses) +
+      quicksum(penalty_costs[d] * (demands[d] - quicksum(serve_customer[r, d] for r in warehouses)) for d in customers),
+      GRB.MINIMIZE
+  )
+  # Constraints
 
-        # Binary variables: 1 if customer c is served by warehouse w, 0 otherwise
-        serve_customer = model.addVars(warehouses, customers, vtype=GRB.BINARY, name="Serve")
-        # Objective: Minimize total fixed and transportation costs
-        model.setObjective(
-            quicksum(fixed_costs[w] * open_warehouse[w] for w in warehouses) +
-            quicksum(transport_costs[w][c] * serve_customer[w, c] for w in warehouses for c in customers),
-            GRB.MINIMIZE
-        )
-        # Constraints
+  # 1. Each customer is served by exactly one warehouse
+  for c in customers:
+      model.addConstr(quicksum(serve_customer[w, c] for w in warehouses) == 1, f"ServeCustomer_{c}")
 
-        # 1. Each customer is served by exactly one warehouse
-        for c in customers:
-            model.addConstr(quicksum(serve_customer[w, c] for w in warehouses) == 1, f"ServeCustomer_{c}")
+  # 2. A warehouse can serve a customer only if it is open
+  for w in warehouses:
+      for c in customers:
+          model.addConstr(serve_customer[w, c] <= open_warehouse[w], f"Link_{w}_{c}")
 
-        # 2. A warehouse can serve a customer only if it is open
-        for w in warehouses:
-            for c in customers:
-                model.addConstr(serve_customer[w, c] <= open_warehouse[w], f"Link_{w}_{c}")
-        # Optimize the model
-        model.optimize()
-        # Print results
-        if model.status == GRB.OPTIMAL:
-            print("Optimal Solution Found:")
-            for w in warehouses:
-                if open_warehouse[w].x > 0.5:  # Open warehouses
-                    print(f"Warehouse in location {w+1} is open.")
-            # for w in warehouses:
-            #     for c in customers:
-            #         if serve_customer[w, c].x > 0.5:  # Customers served by warehouses
-            #             print(f"Customer {c+1} is served by Warehouse {w+1}.")
-            print(f"Total Cost = {model.objVal}")
-        else:
-            print("No optimal solution found.")
+  # 3. Non-negativity of served demand
+  model.addConstrs(
+      serve_customer[r, d] >= 0 for r in warehouses for d in customers
+  )
+  # Optimize the model
+  model.optimize()
+
+  # Print results
+  if model.status == GRB.OPTIMAL:
+      print("\nOptimal Solution Found:\n")
+      for w in warehouses:
+          if open_warehouse[w].x > 0.5:  # Open warehouses
+              print(f"Warehouse in location {w+1} is open.")
+      # for w in warehouses:
+      #     for c in customers:
+      #         if serve_customer[w, c].x > 0.5:  # Customers served by warehouses
+      #             print(f"Customer {c+1} is served by Warehouse {w+1}.")
+      print(f"\nTotal Cost = {model.objVal}")
+  else:
+      print("No optimal solution found.")
                   `; // This is the code you want to display
-      // Insert the code into the container
-      codeContainer.querySelector("code").textContent = code;
+    // Insert the code into the container
+    codeContainer.querySelector("code").textContent = code;
 
-      // Show the container
-      codeContainer.style.display = "block";
+    // Show the container
+    codeContainer.style.display = "block";
 
-      // Update the button text to "Hide Code"
-      toggleButton.textContent = "Hide Code";
-      if(detailsSection.style.display === "block"){
-        detailsSection.style.display = "none";
-        toggleDetailsButton.textContent = "Details";
-      }
-      // Trigger Prism.js to highlight the syntax
-      Prism.highlightAll();
-    } else {
-      // If shown, hide the code
-      codeContainer.style.display = "none";
-
-      // Update the button text to "Show Code"
-      toggleButton.textContent = "Code";
+    // Update the button text to "Hide Code"
+    toggleButton.textContent = "Hide Code";
+    if (detailsSection.style.display === "block") {
+      detailsSection.style.display = "none";
+      toggleDetailsButton.textContent = "Details";
     }
+    // Trigger Prism.js to highlight the syntax
+    Prism.highlightAll();
+  } else {
+    // If shown, hide the code
+    codeContainer.style.display = "none";
+
+    // Update the button text to "Show Code"
+    toggleButton.textContent = "Code";
   }
+}
 
 // Smooth scroll to output section
 function scrollToOutput(id) {
-    setTimeout(() => {
-        const outputSection = document.getElementById(id);
-        outputSection.scrollIntoView({ behavior: "smooth" });
-    }, 500); // Adjust delay to match response time
+  setTimeout(() => {
+    const outputSection = document.getElementById(id);
+    outputSection.scrollIntoView({ behavior: "smooth" });
+  }, 500); // Adjust delay to match response time
 }
 
-function toggleDetails (){
-    var detailsSection = document.getElementById("detailsSection");
-    var toggleDetailsButton = document.getElementById("toggleDetailsButton");
-    var toggleCodeButton = document.getElementById("toggleCodeButton");
-    var codeSection = document.getElementById("code-container");
-    if (detailsSection.style.display === "none") {
-        detailsSection.style.display = "block";
-        toggleDetailsButton.textContent = "Hide Details";
-        console.log("Details shown");
-        if(codeSection.style.display === "block"){
-            codeSection.style.display = "none";
-            toggleCodeButton.textContent = "Code";
-            console.log("Code hidden");
-        }
-    } else {
-        detailsSection.style.display = "none";
-        toggleDetailsButton.textContent = "Details";
-        console.log("Details hidden");
+function toggleDetails() {
+  var detailsSection = document.getElementById("detailsSection");
+  var toggleDetailsButton = document.getElementById("toggleDetailsButton");
+  var toggleCodeButton = document.getElementById("toggleCodeButton");
+  var codeSection = document.getElementById("code-container");
+  if (detailsSection.style.display === "none") {
+    detailsSection.style.display = "block";
+    toggleDetailsButton.textContent = "Hide Details";
+    console.log("Details shown");
+    if (codeSection.style.display === "block") {
+      codeSection.style.display = "none";
+      toggleCodeButton.textContent = "Code";
+      console.log("Code hidden");
     }
-};
-
+  } else {
+    detailsSection.style.display = "none";
+    toggleDetailsButton.textContent = "Details";
+    console.log("Details hidden");
+  }
+}

@@ -33,9 +33,9 @@ def submit_form():
     # Variable costs
     variable_costs = [int(request.form[f'variable_cost_{i}']) for i in range(warehousesNbre)]
     # penalty costs
-    penality_cost = [int(request.form[f'penality_cost_{i}']) for i in range(customersNbre)]
-    # demand
-    demands = [int(request.form[f'demands_{i}']) for i in range(customersNbre)]
+    penality_costs = [int(request.form[f'penality_cost_{i}']) for i in range(customersNbre)]
+    # demands
+    demands = [int(request.form[f'demand_{i}']) for i in range(customersNbre)]
     # Capacities
     capacities = [int(request.form[f'capacity_{i}']) for i in range(warehousesNbre)]
     # Min service time
@@ -48,7 +48,7 @@ def submit_form():
         "fixed_costs": fixed_costs,
         "transport_costs": transport_costs,
         "variable_costs": variable_costs,
-        "penality_cost": penality_cost,
+        "penality_costs": penality_costs,
         "demands": demands,
         "capacities": capacities,
         "min_service": min_service,
